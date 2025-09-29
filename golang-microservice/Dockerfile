@@ -1,10 +1,17 @@
 # Start from the official Golang image as the build stage
-FROM golang:1.22-alpine AS builder
+FROM golang:1.22.3-alpine AS builder
 WORKDIR /app
+
+# Kopier go.mod og go.sum først for bedre cache
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Kopier resten av koden
 COPY . .
-RUN go mod init golang-microservice || true
-RUN go mod tidy
-RUN go build -o golang-microservice main.go
+
+# Bygg statisk binær (unngå C-avhengigheter)
+RUN CGO_ENABLED=0 go build -o golang-microservice main.go
 
 # Use a minimal image for the runtime
 FROM alpine:latest
