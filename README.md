@@ -191,10 +191,7 @@ Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre. Her er fa
 | **C#**                  | 25s      | 856MB       | 88MB          | 768MB (90%) |
 | **Java Spring Boot**    | 43s      | 587MB       | 121MB         | 466MB (79%) |
 | **Plain Java**          | 27s      | 696MB       | 102MB         | 594MB (85%) |
-| **Golang**              | 11s      | ~370MB*     | 10.5MB        | ~359MB (97%) |
-
-
-*For Go-tjenesten rapporteres kun runtime-image etter build, men build-staget bruker `golang:1.22-alpine` (~370MB). Runtime-image er kun 10.5MB.*
+| **Golang**              | 11s      | 345MB       | 11.5MB        | 333.5MB (97%) |
 
 Dette viser hvor mye plass man sparer ved å kun ta med nødvendige runtime-filer i produksjonscontaineren, og utelate alle byggverktøy og SDK-er. I tillegg reduseres angrepsflaten betraktelig, fordi runtime-imaget ikke inneholder byggeverktøy eller utviklingsverktøy som potensielt kan utnyttes av angripere. Dette gir en sikrere produksjonscontainer.
 
@@ -224,7 +221,7 @@ Resultater fra automatisert test (1000 kall mot /health, september 2025):
 | **C#**                  | 628 ms       | 40.66 MiB         | 0.0066 s          |
 | **Java Spring Boot**    | 1669 ms      | 186.1 MiB         | 0.0073 s          |
 | **Plain Java**          | 627 ms       | 72.05 MiB         | 0.0072 s          |
-| **Golang**              | 19 ms        | 5.72 MiB          | 0.0071 s          |
+| **Golang**              | 20 ms        | 1.9 MiB           | 0.0069 s          |
 
 ### Drøfting av resultatene
 
