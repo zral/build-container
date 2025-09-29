@@ -1,0 +1,6 @@
+# Ignore build output directories for Java
+java-microservice/target/
+plain-java-microservice/target/
+# Ignore other common build artifacts
+*.class
+*.jar
