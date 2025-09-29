@@ -1,7 +1,7 @@
 # Bygg-container: C#, Java Spring Boot, Plain Java og Golang mikrotjenester med Prometheus-målinger
 
 ## Oversikt
-Dette prosjektet demonstrerer hvordan man bygger og kjører fire forskjellige mikrotjenester (C#, Java Spring Boot, Plain Java og Golang) i et containerisert miljø ved hjelp av Docker og docker-compose. 
+Dette prosjektet demonstrerer hvordan man bygger og kjører fire "like" mikrotjenester med ulik teknologistakk (C#, Java Spring Boot, Plain Java og Golang) i et containerisert miljø ved hjelp av Docker og docker-compose. 
 
 Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
 
