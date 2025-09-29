@@ -5,7 +5,7 @@ Dette prosjektet demonstrerer hvordan man bygger og kjører fire forskjellige mi
 
 Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
 
-Det er og tatt med [målinger av ressursbrukt og effektivitet](#byggetid-og-størrelsesforskjell-på-images-og-teknologistakkene), og sammenlignet på tvers av teknologistakkene.
+Det er tatt med [målinger av ressursbruk og effektivitet](#byggetid-og-størrelsesforskjell-på-images-og-teknologistakkene), og sammenlignet på tvers av teknologistakkene både for bygg og kjøring.
 
 ## Struktur
 
@@ -26,10 +26,6 @@ Det er og tatt med [målinger av ressursbrukt og effektivitet](#byggetid-og-stø
 Alle mikrotjenestene eksponerer Prometheus-kompatible metrics-endpoints:
 - `/metrics` for C#, Plain Java og Golang
 - `/actuator/prometheus` for Java Spring Boot
-
-
-
-### 1. C# mikrotjenesten
 
 ### 1. C# mikrotjeneste
 Ligger i `csharp-microservice/`. Bruker ASP.NET Core og `prometheus-net` for Prometheus-målinger.
