@@ -5,7 +5,7 @@ Dette prosjektet demonstrerer hvordan man bygger og kjører fire forskjellige mi
 
 Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
 
-Det er og tatt med [målinger av ressursbrukt og effektivitet](#ytelsesmålinger-oppstartstid-minnebruk-og-svartid), og sammenlignet på tvers av teknologistakkene.
+Det er og tatt med [målinger av ressursbrukt og effektivitet](#byggetid-og-størrelsesforskjell-på-images-og-teknologistakkene), og sammenlignet på tvers av teknologistakkene.
 
 ## Struktur
 
