@@ -206,7 +206,7 @@ Det er imidlertid store forskjeller mellom de ulike teknologistakkene når det g
 
 - **Plain Java** har byggetid og runtime-image mellom C# og Spring Boot. Her er det færre rammeverk og mindre overhead enn Spring Boot, men fortsatt JVM-basert.
 
-- **Golang** skiller seg ut med ekstremt liten runtime-image (10.5MB) og rask byggetid (11s). Go kompilerer til én statisk binærfil uten runtime-avhengigheter, og sluttbildet inneholder kun denne og et minimalt base-image (alpine). Build-image er større (~370MB), men dette påvirker kun byggeprosessen, ikke produksjonsmiljøet.
+- **Golang** skiller seg ut med ekstremt liten runtime-image (11.5MB) og rask byggetid (11s). Go kompilerer til én statisk binærfil uten runtime-avhengigheter, og sluttbildet inneholder kun denne og et minimalt base-image. Build-image er større (345MB), men dette påvirker kun byggeprosessen, ikke produksjonsmiljøet. 
 
 **Oppsummert:**
 - Go gir overlegent minst runtime-image og raskest bygg, ideelt for små, raske containere.
@@ -233,10 +233,12 @@ Resultater fra automatisert test (1000 kall mot /health, september 2025):
 	- C# og Plain Java har begge lav oppstartstid (~600 ms), mens Java Spring Boot bruker lengst tid (1669 ms) grunnet initialisering av Spring-rammeverket.
 
 - **Minnebruk:**
-	- Golang bruker desidert minst minne (~6 MiB). Plain Java og C# bruker moderat minne, mens Java Spring Boot bruker mest (186 MiB), hovedsakelig pga. rammeverk og avhengigheter.
+	- Golang bruker desidert minst minne (1.9 MiB). Plain Java og C# bruker moderat minne, mens Java Spring Boot bruker mest (186 MiB), hovedsakelig pga. rammeverk og avhengigheter.
 
 - **Gjennomsnittstid per kall:**
 	- Alle tjenester leverer svært lav svartid per kall (~0.007 s), med små forskjeller. Dette viser at alle løsningene håndterer enkle HTTP-kall effektivt under lav belastning.
 
 - **Helhet:**
-	- Go utmerker seg på ressursbruk og oppstart, men alle løsningene gir god ytelse for enkle mikrotjenester. Valg av teknologi bør baseres på teamets kompetanse, behov for rammeverk, og krav til ressursbruk og oppstartstid.
+	- Go utmerker seg på ressursbruk og oppstart. Sammenlignet med Java Spring Boot er runtime imaget ca 1/10, minnebruk ca 1/100 del, og oppstartstid ca 1/80 del. Dette er oppsiktsvekkende tall og kan være viktig hvis ressurser en knappe.
+    - Likevel gir alle løsningene god ytelse for enkle mikrotjenester
+    - Valg av teknologi bør baseres på teamets kompetanse, behov for rammeverk, og krav til ressursbruk og oppstartstid. 
