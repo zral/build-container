@@ -1,10 +1,25 @@
-version: '3.8'
 services:
-  microservice:
+  csharp-microservice:
     build:
-      context: .
+      context: ./csharp-microservice
       dockerfile: Dockerfile
     ports:
       - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+  java-microservice:
+    build:
+      context: ./java-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+  plain-java-microservice:
+    build:
+      context: ./plain-java-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - JAVA_OPTS=-Xmx256m -Xms256m

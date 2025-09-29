@@ -1,7 +1,19 @@
+
 global:
   scrape_interval: 15s
 
 scrape_configs:
   - job_name: 'csharp-microservice'
+    metrics_path: /metrics
     static_configs:
-      - targets: ['microservice:80']
+      - targets: ['csharp-microservice:80']
+
+  - job_name: 'java-microservice'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['java-microservice:8081']
+
+  - job_name: 'plain-java-microservice'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['plain-java-microservice:8082']

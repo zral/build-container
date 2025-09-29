@@ -14,8 +14,8 @@ app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
-    endpoints.MapMetrics(); // Prometheus metrics at /metrics
+	endpoints.MapControllers();
+	endpoints.MapMetrics(); // Prometheus metrics at /metrics
 });
 
 app.MapGet("/health", () => Results.Ok(new { status = "Healthy" }));
