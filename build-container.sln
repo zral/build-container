@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "csharp-microservice", "csharp-microservice", "{6BB7A048-9E17-E068-32A5-6B108B3374E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build-container", "csharp-microservice\src\build-container.csproj", "{F76AA132-2373-0768-378E-156CB2797D64}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F76AA132-2373-0768-378E-156CB2797D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F76AA132-2373-0768-378E-156CB2797D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F76AA132-2373-0768-378E-156CB2797D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F76AA132-2373-0768-378E-156CB2797D64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F76AA132-2373-0768-378E-156CB2797D64} = {6BB7A048-9E17-E068-32A5-6B108B3374E7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F05505A-DB32-4F4F-83A1-928BFD50C89D}
+	EndGlobalSection
+EndGlobal

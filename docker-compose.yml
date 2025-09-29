@@ -23,3 +23,10 @@ services:
       - "8082:8082"
     environment:
       - JAVA_OPTS=-Xmx256m -Xms256m
+
+  golang-microservice:
+    build:
+      context: ./golang-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"

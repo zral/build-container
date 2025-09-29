@@ -1,8 +1,7 @@
-
-# Bygg-container: C#, Java og Plain Java mikrotjenester med Prometheus-målinger
+# Bygg-container: C#, Java, Plain Java og Golang mikrotjenester med Prometheus-målinger
 
 ## Oversikt
-Dette prosjektet demonstrerer hvordan man bygger og kjører tre forskjellige mikrotjenester (C#, Java Spring Boot og Plain Java) i et containerisert miljø ved hjelp av Docker og docker-compose. Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
+Dette prosjektet demonstrerer hvordan man bygger og kjører fire forskjellige mikrotjenester (C#, Java Spring Boot, Plain Java og Golang) i et containerisert miljø ved hjelp av Docker og docker-compose. Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
 
 ## Struktur
 
@@ -11,6 +10,7 @@ Dette prosjektet demonstrerer hvordan man bygger og kjører tre forskjellige mik
 ├── csharp-microservice/     # C# ASP.NET Core mikrotjeneste
 ├── java-microservice/       # Java Spring Boot mikrotjeneste  
 ├── plain-java-microservice/ # Plain Java med Jetty mikrotjeneste
+├── golang-microservice/     # Go (Golang) mikrotjeneste
 ├── docker-compose.yml       # Orchestrering av alle tjenester
 ├── prometheus.yml           # Prometheus konfigurasjon
 └── README.md                # Denne filen
@@ -18,9 +18,11 @@ Dette prosjektet demonstrerer hvordan man bygger og kjører tre forskjellige mik
 
 ## Hvordan fungerer løsningen?
 
+
 Alle mikrotjenestene eksponerer Prometheus-kompatible metrics-endpoints:
-- `/metrics` for C# og Plain Java
+- `/metrics` for C#, Plain Java og Golang
 - `/actuator/prometheus` for Java Spring Boot
+
 
 
 ### 1. C# mikrotjenesten
@@ -39,6 +41,7 @@ Ligger i `csharp-microservice/`. Bruker ASP.NET Core og `prometheus-net` for Pro
 **Beskrivelse:**
 En moderne .NET-mikrotjeneste med innebygd støtte for Prometheus-målinger og enkel helsesjekk. Multi-stage Dockerfile gir liten og sikker runtime-container.
 
+
 ### 2. Java Spring Boot mikrotjeneste
 Ligger i `java-microservice/`. Bruker Spring Boot med Micrometer og Actuator for Prometheus-målinger.
 
@@ -54,7 +57,7 @@ Ligger i `java-microservice/`. Bruker Spring Boot med Micrometer og Actuator for
 **Beskrivelse:**
 Standard Spring Boot-mikrotjeneste med ferdig metrics- og helsesjekk via Actuator. Multi-stage Dockerfile gir liten og sikker runtime-container.
 
-### 3. Plain Java mikrotjenesten
+
 
 ### 3. Plain Java mikrotjeneste
 Ligger i `plain-java-microservice/`. Bruker plain Java med Jetty embedded server og Micrometer for Prometheus-målinger.
@@ -70,6 +73,21 @@ Ligger i `plain-java-microservice/`. Bruker plain Java med Jetty embedded server
 
 **Beskrivelse:**
 Demonstrerer hvordan man kan bygge en mikrotjeneste uten tunge rammeverk som Spring Boot, kun med embedded HTTP-server og manuell metrics-integrasjon. Tjenesten bygges og kjøres nå med Java 21. Multi-stage Dockerfile gir liten og sikker runtime-container.
+
+
+### 4. Golang mikrotjeneste
+Ligger i `golang-microservice/`. En enkel Go-basert mikrotjeneste med Prometheus-målinger.
+
+**Teknologi:**
+- Go 1.22
+- prometheus/client_golang
+
+**Endpoints:**
+- `/health` – Helsesjekk
+- `/metrics` – Prometheus metrics
+
+**Beskrivelse:**
+Minimal mikrotjeneste skrevet i Go, med Prometheus-integrasjon og multi-stage Dockerfile for små og sikre containere. Viser hvor enkelt det er å lage en observérbar mikrotjeneste i Go.
 
 
 
@@ -102,18 +120,22 @@ Alle tre mikrotjenestene i dette prosjektet bruker multi-stage builds for å sik
 ---
 
 
-### 4. docker-compose
+
+### 5. docker-compose
 `docker-compose.yml` starter alle mikrotjenestene:
 - C#-tjenesten på port 8080
 - Java Spring Boot-tjenesten på port 8081
 - Plain Java-tjenesten på port 8082
+- Golang-tjenesten på port 8083
 
 
-### 5. Prometheus-integrasjon
+
+### 6. Prometheus-integrasjon
 `prometheus.yml` viser hvordan Prometheus kan konfigureres til å scrape alle tjenestene:
 - C#: `/metrics` på port 8080
 - Java Spring Boot: `/actuator/prometheus` på port 8081
 - Plain Java: `/metrics` på port 8082
+- Golang: `/metrics` på port 8083
 
 
 ## Kom i gang
@@ -137,16 +159,20 @@ Alle tre mikrotjenestene i dette prosjektet bruker multi-stage builds for å sik
 docker-compose up --build
 ```
 
+
 2. Åpne i nettleser:
-    - **C#**
-        - Helsesjekk: [http://localhost:8080/health](http://localhost:8080/health)
-        - Metrics: [http://localhost:8080/metrics](http://localhost:8080/metrics)
-    - **Java Spring Boot**
-        - Helsesjekk: [http://localhost:8081/health](http://localhost:8081/health)
-        - Metrics: [http://localhost:8081/actuator/prometheus](http://localhost:8081/actuator/prometheus)
-    - **Plain Java**
-        - Helsesjekk: [http://localhost:8082/health](http://localhost:8082/health)
-        - Metrics: [http://localhost:8082/metrics](http://localhost:8082/metrics)
+	- **C#**
+		- Helsesjekk: [http://localhost:8080/health](http://localhost:8080/health)
+		- Metrics: [http://localhost:8080/metrics](http://localhost:8080/metrics)
+	- **Java Spring Boot**
+		- Helsesjekk: [http://localhost:8081/health](http://localhost:8081/health)
+		- Metrics: [http://localhost:8081/actuator/prometheus](http://localhost:8081/actuator/prometheus)
+	- **Plain Java**
+		- Helsesjekk: [http://localhost:8082/health](http://localhost:8082/health)
+		- Metrics: [http://localhost:8082/metrics](http://localhost:8082/metrics)
+	- **Golang**
+		- Helsesjekk: [http://localhost:8083/health](http://localhost:8083/health)
+		- Metrics: [http://localhost:8083/metrics](http://localhost:8083/metrics)
 
 3. (Valgfritt) Start Prometheus med `prometheus.yml` for å samle inn målinger fra alle tre tjenester.
 
@@ -156,23 +182,35 @@ docker-compose up --build
 * Eksponering av helse- og måle-endepunkter
 * Enkel integrasjon med Prometheus for overvåkning
 
-## Størrelsesforskjell på images
-Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre:
+
+## Byggetid og størrelsesforskjell på images og teknologistakkene
+Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre. Her er faktiske målinger fra siste build (september 2025):
+
+| Tjeneste                | Byggetid | Build-image | Runtime-image | Reduksjon |
+|-------------------------|----------|-------------|---------------|-----------|
+| **C#**                  | 25s      | 856MB       | 88MB          | 768MB (90%) |
+| **Java Spring Boot**    | 43s      | 587MB       | 121MB         | 466MB (79%) |
+| **Plain Java**          | 27s      | 696MB       | 102MB         | 594MB (85%) |
+| **Golang**              | 11s      | ~370MB*     | 10.5MB        | ~359MB (97%) |
 
 
-- **C# bygge-image** (`build-container:build`): 856MB
-- **C# runtime-image** (`build-container:runtime`): 218MB
+*For Go-tjenesten rapporteres kun runtime-image etter build, men build-staget bruker `golang:1.22-alpine` (~370MB). Runtime-image er kun 10.5MB.*
 
-- **Java bygge-image** (`java-microservice:build`): 587MB
-- **Java runtime-image** (`java-microservice:runtime`): 312MB
+Dette viser hvor mye plass man sparer ved å kun ta med nødvendige runtime-filer i produksjonscontaineren, og utelate alle byggverktøy og SDK-er. I tillegg reduseres angrepsflaten betraktelig, fordi runtime-imaget ikke inneholder byggeverktøy eller utviklingsverktøy som potensielt kan utnyttes av angripere. Dette gir en sikrere produksjonscontainer.
 
-- **Plain Java bygge-image**: 696MB
-- **Plain Java runtime-image**: 267MB
+Det er imidlertid store forskjeller mellom de ulike teknologistakkene når det gjelder både byggetid og størrelsen på runtime-image:
 
-Dette viser hvor mye plass man sparer ved å kun ta med nødvendige runtime-filer i produksjonscontaineren, og utelate alle byggverktøy og SDK-er.
- I tillegg reduseres angrepsflaten betraktelig, fordi runtime-imaget ikke inneholder byggeverktøy eller utviklingsverktøy som potensielt kan utnyttes av angripere. Dette gir en sikrere produksjonscontainer.
+- **C#** har rask byggetid (25s) og et svært lite runtime-image (88MB) sammenlignet med build-image (856MB). .NETs publiseringsprosess og multi-stage build gir et effektivt sluttresultat.
 
-**Sammenligning av space-besparelser med multi-stage builds:**
-- C#: 856MB → 218MB (638MB spart, 75% reduksjon)
-- Java Spring Boot: 587MB → 312MB (275MB spart, 47% reduksjon)  
-- Plain Java: 696MB → 267MB (429MB spart, 62% reduksjon)
+- **Java Spring Boot** har lengst byggetid (43s) og et større runtime-image (121MB). Dette skyldes at Spring Boot-applikasjoner inkluderer mange avhengigheter og at JVM-runtime er større enn for Go og .NET. Build-image er også stort (587MB), men multi-stage build kutter mye.
+
+- **Plain Java** har byggetid og runtime-image mellom C# og Spring Boot. Her er det færre rammeverk og mindre overhead enn Spring Boot, men fortsatt JVM-basert.
+
+- **Golang** skiller seg ut med ekstremt liten runtime-image (10.5MB) og rask byggetid (11s). Go kompilerer til én statisk binærfil uten runtime-avhengigheter, og sluttbildet inneholder kun denne og et minimalt base-image (alpine). Build-image er større (~370MB), men dette påvirker kun byggeprosessen, ikke produksjonsmiljøet.
+
+**Oppsummert:**
+- Go gir overlegent minst runtime-image og raskest bygg, ideelt for små, raske containere.
+- C# og Plain Java gir små og sikre runtime-images, men med noe lengre byggetid.
+- Java Spring Boot gir størst runtime-image og lengst byggetid, men er til gjengjeld svært fleksibelt og utvidbart.
+
+Valg av teknologi bør avhenge av krav til ytelse, sikkerhet, image-størrelse og hvor mye rammeverk og funksjonalitet man trenger.
