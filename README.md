@@ -115,7 +115,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 I første steg bygges prosjektet, i andre steg kopieres kun den ferdige JAR-filen inn i et rent runtime-image.
 
-Alle tre mikrotjenestene i dette prosjektet bruker multi-stage builds for å sikre små og sikre runtime-containere uten byggeverktøy.
+Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å sikre små og sikre runtime-containere uten byggeverktøy.
 
 ---
 
