@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'csharp-microservice'
+    static_configs:
+      - targets: ['microservice:80']
