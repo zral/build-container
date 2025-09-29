@@ -72,8 +72,34 @@ Ligger i `plain-java-microservice/`. Bruker plain Java med Jetty embedded server
 Demonstrerer hvordan man kan bygge en mikrotjeneste uten tunge rammeverk som Spring Boot, kun med embedded HTTP-server og manuell metrics-integrasjon. Tjenesten bygges og kjøres nå med Java 21. Multi-stage Dockerfile gir liten og sikker runtime-container.
 
 
-### 3. Dockerfile (multi-stage build)
-Alle tre mikrotjenestene bruker multi-stage builds for å sikre små og sikre runtime-containere uten byggeverktøy.
+
+## Hva er multi-stage build?
+
+Multi-stage build er en teknikk i Docker hvor man definerer flere "steg" (stages) i én og samme Dockerfile. Hvert steg kan bruke et eget base-image og har sitt eget filsystem. Dette gjør det mulig å bygge applikasjonen i et image med alle nødvendige byggverktøy (f.eks. Maven, .NET SDK), og deretter kopiere kun de ferdige artefaktene (f.eks. JAR, DLL) over i et nytt, mye mindre image som kun inneholder det som trengs for å kjøre applikasjonen (f.eks. JRE, ASP.NET runtime).
+
+**Fordeler med multi-stage build:**
+- Sluttbildet (runtime-image) blir mye mindre, fordi det ikke inneholder byggverktøy, SDK-er eller kildekode.
+- Redusert angrepsflate og bedre sikkerhet.
+- Raskere deploy og mindre båndbreddebruk.
+- Man kan bruke forskjellige base-images for bygg og runtime (f.eks. bygge med Maven/JDK, kjøre med kun JRE).
+
+**Eksempel på prinsipp:**
+```
+FROM maven:3-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY . .
+RUN mvn package
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/app.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+I første steg bygges prosjektet, i andre steg kopieres kun den ferdige JAR-filen inn i et rent runtime-image.
+
+Alle tre mikrotjenestene i dette prosjektet bruker multi-stage builds for å sikre små og sikre runtime-containere uten byggeverktøy.
+
+---
 
 
 ### 4. docker-compose

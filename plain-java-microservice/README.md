@@ -37,7 +37,41 @@ java -jar target/plain-java-microservice-1.0-SNAPSHOT.jar
 ```
 
 ### 3. Bygg og kjør med Docker
-Prosjektet har en Dockerfile som bruker multi-stage build for å lage et lite og sikkert image. Tjenesten bygges og kjøres nå med Java 21. Bygg og kjør slik:
+
+## Multi-stage build for denne tjenesten
+
+Denne tjenesten bruker en multi-stage Dockerfile for å bygge og pakke applikasjonen på en effektiv og sikker måte:
+
+1. **Byggesteg:**
+	- Starter fra et image med Maven og JDK (maven:3-eclipse-temurin-21).
+	- Bygger prosjektet og lager en JAR-fil.
+2. **Runtime-steg:**
+	- Starter fra et rent og lite JRE-image (eclipse-temurin:21-jre).
+	- Kopierer kun den ferdige JAR-filen fra byggesteg.
+	- Ingen byggverktøy, kildekode eller unødvendige filer blir med i sluttbildet.
+
+**Fordeler:**
+- Sluttbildet blir mye mindre og sikrere.
+- Kun det som trengs for å kjøre applikasjonen er med.
+- Raskere deploy og mindre angrepsflate.
+
+**Eksempel fra Dockerfile:**
+```dockerfile
+FROM maven:3-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/plain-java-microservice-1.0-SNAPSHOT.jar app.jar
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+Bygg og kjør slik:
 
 ```bash
 docker build -t plain-java-microservice .
