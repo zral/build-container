@@ -57,3 +57,4 @@ Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre:
 - **Runtime-image** (`build-container:runtime`): 218MB
 
 Dette viser hvor mye plass man sparer ved å kun ta med nødvendige runtime-filer i produksjonscontaineren, og utelate alle byggverktøy og SDK-er.
+ I tillegg reduseres angrepsflaten betraktelig, fordi runtime-imaget ikke inneholder byggeverktøy eller utviklingsverktøy som potensielt kan utnyttes av angripere. Dette gir en sikrere produksjonscontainer.
