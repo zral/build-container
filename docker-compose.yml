@@ -4,7 +4,7 @@ services:
       context: ./csharp-microservice
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
   java-microservice:

@@ -8,10 +8,8 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.example.HealthServlet;
+import com.example.MetricsServlet;
 
 /**
  * Plain Java microservice with Jetty
@@ -44,19 +42,5 @@ public class App
     }
 }
 
-class HealthServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        App.prometheusRegistry.counter("health.requests").increment();
-        resp.setContentType("application/json");
-        resp.getWriter().write("{\"status\":\"Healthy\"}");
-    }
-}
-
-class MetricsServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/plain");
-        resp.getWriter().write(App.prometheusRegistry.scrape());
-    }
-}
+ 
+ // The HealthServlet and MetricsServlet classes have been moved to their own files.

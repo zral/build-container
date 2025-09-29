@@ -1,0 +1,48 @@
+\n=== Tester csharp-microservice ===
+ Network build-container_default  Creating
+ Network build-container_default  Created
+ Container build-container-csharp-microservice-1  Creating
+ Container build-container-csharp-microservice-1  Created
+ Container build-container-csharp-microservice-1  Starting
+ Container build-container-csharp-microservice-1  Started
+csharp-microservice oppstartstid: 628 ms
+Kjører 1000 requests mot http://localhost:8080/health ...
+Total tid: 6.656 s, Gjennomsnitt per kall: .0066 s
+csharp-microservice minnebruk: 40.66MiB / 7.654GiB
+----------------------
+\n=== Tester java-microservice ===
+ Network build-container_default  Creating
+ Network build-container_default  Created
+ Container build-container-java-microservice-1  Creating
+ Container build-container-java-microservice-1  Created
+ Container build-container-java-microservice-1  Starting
+ Container build-container-java-microservice-1  Started
+java-microservice oppstartstid: 1669 ms
+Kjører 1000 requests mot http://localhost:8081/health ...
+Total tid: 7.396 s, Gjennomsnitt per kall: .0073 s
+java-microservice minnebruk: 186.1MiB / 7.654GiB
+----------------------
+\n=== Tester plain-java-microservice ===
+ Network build-container_default  Creating
+ Network build-container_default  Created
+ Container build-container-plain-java-microservice-1  Creating
+ Container build-container-plain-java-microservice-1  Created
+ Container build-container-plain-java-microservice-1  Starting
+ Container build-container-plain-java-microservice-1  Started
+plain-java-microservice oppstartstid: 627 ms
+Kjører 1000 requests mot http://localhost:8082/health ...
+Total tid: 7.271 s, Gjennomsnitt per kall: .0072 s
+plain-java-microservice minnebruk: 72.05MiB / 7.654GiB
+----------------------
+\n=== Tester golang-microservice ===
+ Network build-container_default  Creating
+ Network build-container_default  Created
+ Container build-container-golang-microservice-1  Creating
+ Container build-container-golang-microservice-1  Created
+ Container build-container-golang-microservice-1  Starting
+ Container build-container-golang-microservice-1  Started
+golang-microservice oppstartstid: 19 ms
+Kjører 1000 requests mot http://localhost:8083/health ...
+Total tid: 7.196 s, Gjennomsnitt per kall: .0071 s
+golang-microservice minnebruk: 5.723MiB / 7.654GiB
+----------------------

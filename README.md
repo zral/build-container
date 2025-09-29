@@ -214,3 +214,29 @@ Det er imidlertid store forskjeller mellom de ulike teknologistakkene når det g
 - Java Spring Boot gir størst runtime-image og lengst byggetid, men er til gjengjeld svært fleksibelt og utvidbart.
 
 Valg av teknologi bør avhenge av krav til ytelse, sikkerhet, image-størrelse og hvor mye rammeverk og funksjonalitet man trenger.
+
+## Ytelsesmålinger: Oppstartstid, minnebruk og svartid
+
+Resultater fra automatisert test (1000 kall mot /health, september 2025):
+
+| Tjeneste                | Oppstartstid | Minnebruk         | Gj.snitt per kall |
+|-------------------------|--------------|-------------------|-------------------|
+| **C#**                  | 628 ms       | 40.66 MiB         | 0.0066 s          |
+| **Java Spring Boot**    | 1669 ms      | 186.1 MiB         | 0.0073 s          |
+| **Plain Java**          | 627 ms       | 72.05 MiB         | 0.0072 s          |
+| **Golang**              | 19 ms        | 5.72 MiB          | 0.0071 s          |
+
+### Drøfting av resultatene
+
+- **Oppstartstid:**
+	- Golang-tjenesten starter ekstremt raskt (19 ms), langt raskere enn de andre. Dette skyldes at Go kompilerer til én statisk binærfil uten JVM eller runtime-overhead.
+	- C# og Plain Java har begge lav oppstartstid (~600 ms), mens Java Spring Boot bruker lengst tid (1669 ms) grunnet initialisering av Spring-rammeverket.
+
+- **Minnebruk:**
+	- Golang bruker desidert minst minne (~6 MiB). Plain Java og C# bruker moderat minne, mens Java Spring Boot bruker mest (186 MiB), hovedsakelig pga. rammeverk og avhengigheter.
+
+- **Gjennomsnittstid per kall:**
+	- Alle tjenester leverer svært lav svartid per kall (~0.007 s), med små forskjeller. Dette viser at alle løsningene håndterer enkle HTTP-kall effektivt under lav belastning.
+
+- **Helhet:**
+	- Go utmerker seg på ressursbruk og oppstart, men alle løsningene gir god ytelse for enkle mikrotjenester. Valg av teknologi bør baseres på teamets kompetanse, behov for rammeverk, og krav til ressursbruk og oppstartstid.
