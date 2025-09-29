@@ -140,10 +140,11 @@ Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å si
 
 ## Kom i gang
 
-1. Bygg og start begge mikrotjenestene:
+1. Bygg og start alle mikrotjenestene:
 	```bash
 	docker-compose up --build
 	```
+
 2. Åpne i nettleser:
 	- C# helsesjekk: [http://localhost:8080/health](http://localhost:8080/health)
 	- C# metrics: [http://localhost:8080/metrics](http://localhost:8080/metrics)
@@ -151,6 +152,8 @@ Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å si
 	- Java metrics: [http://localhost:8081/actuator/prometheus](http://localhost:8081/actuator/prometheus)
 	- Plain Java helsesjekk: [http://localhost:8082/health](http://localhost:8082/health)
 	- Plain Java metrics: [http://localhost:8082/metrics](http://localhost:8082/metrics)
+	- Golang helsesjekk: [http://localhost:8083/health](http://localhost:8083/health)
+	- Golang metrics: [http://localhost:8083/metrics](http://localhost:8083/metrics)
 
 3. (Valgfritt) Start Prometheus med `prometheus.yml` for å samle inn målinger fra begge tjenester.
 
