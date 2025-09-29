@@ -226,7 +226,7 @@ Resultater fra automatisert test (1000 kall mot /health, september 2025):
 ### Drøfting av resultatene
 
 - **Oppstartstid:**
-	- Golang-tjenesten starter ekstremt raskt (19 ms), langt raskere enn de andre. Dette skyldes at Go kompilerer til én statisk binærfil uten JVM eller runtime-overhead.
+	- Golang-tjenesten starter ekstremt raskt (20 ms), langt raskere enn de andre. Dette skyldes at Go kompilerer til én statisk binærfil uten JVM eller runtime-overhead.
 	- C# og Plain Java har begge lav oppstartstid (~600 ms), mens Java Spring Boot bruker lengst tid (1669 ms) grunnet initialisering av Spring-rammeverket.
 
 - **Minnebruk:**
