@@ -45,7 +45,15 @@ Dette gir små, sikre og effektive containere.
 3. (Valgfritt) Start Prometheus med `prometheus.yml` for å samle inn målinger.
 
 ## Læringspunkter
-- Multi-stage builds gir små og sikre containere
-- Separasjon av bygg og runtime
-- Eksponering av helse- og måle-endepunkter
-- Enkel integrasjon med Prometheus for overvåkning
+* Multi-stage builds gir små og sikre containere
+* Separasjon av bygg og runtime
+* Eksponering av helse- og måle-endepunkter
+* Enkel integrasjon med Prometheus for overvåkning
+
+## Størrelsesforskjell på images
+Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre:
+
+- **Bygge-image** (`build-container:build`): 856MB
+- **Runtime-image** (`build-container:runtime`): 218MB
+
+Dette viser hvor mye plass man sparer ved å kun ta med nødvendige runtime-filer i produksjonscontaineren, og utelate alle byggverktøy og SDK-er.
