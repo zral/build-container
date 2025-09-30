@@ -1,11 +1,15 @@
-# Bygg-container: C#, Java Spring Boot, Plain Java og Golang mikrotjenester med Prometheus-målinger
+# Ytelse og ressursbruk - C#, Spring Boot, Java, og Golang
 
 ## Oversikt
-Dette prosjektet demonstrerer hvordan man bygger og kjører fire "like" mikrotjenester med ulik teknologistakk (C#, Java Spring Boot, Plain Java og Golang) i et containerisert miljø ved hjelp av Docker og docker-compose. 
+Hensikten med dette prosjektet er å demonstrere hvordan valg av teknologistakk påvirker ytelse og ressursbruk ved bygg og kjøring. 
 
-Løsningen bruker dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Alle mikrotjenestene eksponerer `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints for overvåkning.
+Prosjektet tar utgangspunkt i fire "like" mikrotjenester med ulik teknologistakk (C#, Java Spring Boot, Plain Java og Golang) i et containerisert miljø ved hjelp av Docker og docker-compose.
 
-Det er tatt med [målinger av ressursbruk og effektivitet](#byggetid-og-størrelsesforskjell-på-images-og-teknologistakkene), og sammenlignet på tvers av teknologistakkene både for bygg og kjøring.
+Løsningen bruker *Multi-stage builld* - dedikerte build-containere for å bygge applikasjonene, og deployer kun nødvendige runtime-filer i produksjonscontainerne. Multi-stage builds er en *beste praksis* og gir små og effektive  containere med en minimal angrepsflate, og gir en klar separasjon av separasjon av bygg og runtime.
+
+Alle mikrotjenestene eksponerer kun `/health`-endpoints for helsesjekk og Prometheus-kompatible metrics-endpoints fordi det skal være enkelt å teste og sammenligne dem. Generelt er endepunkter som understøtter overvåkning en anbefalt beste praksis for *observability* for alle mikrotjenester.
+
+Effektivitet og ytelse under [bygg og kjøring](#byggetid-og-størrelsesforskjell-på-images-og-teknologistakkene) er målt, og sammenlignes på tvers av teknologiplattformer. Alle plattformene gir gode resultater. Golang utmerker seg med betydelig lavere ressursbruk, men dette må veies opp mot behov for fleksibilitet, tilgang på kompetanse, og andre faktorer i det enkelte tilfellet. 
 
 ## Struktur
 
@@ -21,7 +25,6 @@ Det er tatt med [målinger av ressursbruk og effektivitet](#byggetid-og-størrel
 ```
 
 ## Hvordan fungerer løsningen?
-
 
 Alle mikrotjenestene eksponerer Prometheus-kompatible metrics-endpoints:
 - `/metrics` for C#, Plain Java og Golang
@@ -57,8 +60,6 @@ Ligger i `java-microservice/`. Bruker Spring Boot med Micrometer og Actuator for
 **Beskrivelse:**
 Standard Spring Boot-mikrotjeneste med ferdig metrics- og helsesjekk via Actuator. Multi-stage Dockerfile gir liten og sikker runtime-container.
 
-
-
 ### 3. Plain Java mikrotjeneste
 Ligger i `plain-java-microservice/`. Bruker plain Java med Jetty embedded server og Micrometer for Prometheus-målinger.
 
@@ -89,9 +90,9 @@ Ligger i `golang-microservice/`. En enkel Go-basert mikrotjeneste med Prometheus
 **Beskrivelse:**
 Minimal mikrotjeneste skrevet i Go, med Prometheus-integrasjon og multi-stage Dockerfile for små og sikre containere. Viser hvor enkelt det er å lage en observérbar mikrotjeneste i Go.
 
+## Bygg
 
-
-## Hva er multi-stage build?
+### 1. Multi-stage build?
 
 Multi-stage build er en teknikk i Docker hvor man definerer flere "steg" (stages) i én og samme Dockerfile. Hvert steg kan bruke et eget base-image og har sitt eget filsystem. Dette gjør det mulig å bygge applikasjonen i et image med alle nødvendige byggverktøy (f.eks. Maven, .NET SDK), og deretter kopiere kun de ferdige artefaktene (f.eks. JAR, DLL) over i et nytt, mye mindre image som kun inneholder det som trengs for å kjøre applikasjonen (f.eks. JRE, ASP.NET runtime).
 
@@ -119,18 +120,14 @@ Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å si
 
 ---
 
-
-
-### 5. docker-compose
+### 2. docker-compose
 `docker-compose.yml` starter alle mikrotjenestene:
 - C#-tjenesten på port 8080
 - Java Spring Boot-tjenesten på port 8081
 - Plain Java-tjenesten på port 8082
 - Golang-tjenesten på port 8083
 
-
-
-### 6. Prometheus-integrasjon
+### 3. Prometheus-integrasjon
 `prometheus.yml` viser hvordan Prometheus kan konfigureres til å scrape alle tjenestene:
 - C#: `/metrics` på port 8080
 - Java Spring Boot: `/actuator/prometheus` på port 8081
@@ -138,7 +135,9 @@ Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å si
 - Golang: `/metrics` på port 8083
 
 
-## Kom i gang
+## Kjøring
+
+Docker må være installert.
 
 1. Bygg og start alle mikrotjenestene:
 	```bash
@@ -157,36 +156,7 @@ Alle fire mikrotjenestene i dette prosjektet bruker multi-stage builds for å si
 
 3. (Valgfritt) Start Prometheus med `prometheus.yml` for å samle inn målinger fra begge tjenester.
 
-1. Bygg og start alle mikrotjenestene:
-```bash
-docker-compose up --build
-```
-
-
-2. Åpne i nettleser:
-	- **C#**
-		- Helsesjekk: [http://localhost:8080/health](http://localhost:8080/health)
-		- Metrics: [http://localhost:8080/metrics](http://localhost:8080/metrics)
-	- **Java Spring Boot**
-		- Helsesjekk: [http://localhost:8081/health](http://localhost:8081/health)
-		- Metrics: [http://localhost:8081/actuator/prometheus](http://localhost:8081/actuator/prometheus)
-	- **Plain Java**
-		- Helsesjekk: [http://localhost:8082/health](http://localhost:8082/health)
-		- Metrics: [http://localhost:8082/metrics](http://localhost:8082/metrics)
-	- **Golang**
-		- Helsesjekk: [http://localhost:8083/health](http://localhost:8083/health)
-		- Metrics: [http://localhost:8083/metrics](http://localhost:8083/metrics)
-
-3. (Valgfritt) Start Prometheus med `prometheus.yml` for å samle inn målinger fra alle tre tjenester.
-
-## Læringspunkter
-* Multi-stage builds gir små og sikre containere
-* Separasjon av bygg og runtime
-* Eksponering av helse- og måle-endepunkter
-* Enkel integrasjon med Prometheus for overvåkning
-
-
-## Byggetid og størrelsesforskjell på images og teknologistakkene
+## Ytelsesmålinger ved bygg: Byggetid og størrelsesforskjell på images og teknologistakkene
 Ved å bruke multi-stage builds blir sluttresultatet betydelig mindre. Her er faktiske målinger fra siste build (september 2025):
 
 | Tjeneste                | Byggetid | Build-image | Runtime-image | Reduksjon |
@@ -215,7 +185,7 @@ Det er imidlertid store forskjeller mellom de ulike teknologistakkene når det g
 
 Valg av teknologi bør avhenge av krav til ytelse, sikkerhet, image-størrelse og hvor mye rammeverk og funksjonalitet man trenger.
 
-## Ytelsesmålinger: Oppstartstid, minnebruk og svartid
+## Ytelsesmålinger ved kjøring: Oppstartstid, minnebruk og svartid
 
 Resultater fra automatisert test (1000 kall mot /health, september 2025):
 
@@ -226,7 +196,7 @@ Resultater fra automatisert test (1000 kall mot /health, september 2025):
 | **Plain Java**          | 627 ms       | 72.05 MiB         | 0.0072 s          |
 | **Golang**              | 20 ms        | 1.9 MiB           | 0.0069 s          |
 
-### Drøfting av resultatene
+### Oppsummert
 
 - **Oppstartstid:**
 	- Golang-tjenesten starter ekstremt raskt (20 ms), langt raskere enn de andre. Dette skyldes at Go kompilerer til én statisk binærfil uten JVM eller runtime-overhead.
@@ -238,7 +208,8 @@ Resultater fra automatisert test (1000 kall mot /health, september 2025):
 - **Gjennomsnittstid per kall:**
 	- Alle tjenester leverer svært lav svartid per kall (~0.007 s), med små forskjeller. Dette viser at alle løsningene håndterer enkle HTTP-kall effektivt under lav belastning.
 
-- **Helhet:**
-	- Go utmerker seg på ressursbruk og oppstart. Sammenlignet med Java Spring Boot er runtime imaget ca 1/10, minnebruk ca 1/100 del, og oppstartstid ca 1/80 del. Dette er oppsiktsvekkende tall og kan være viktig hvis ressurser en knappe.
-    - Likevel gir alle løsningene god ytelse for enkle mikrotjenester
-    - Valg av teknologi bør baseres på teamets kompetanse, behov for rammeverk, og krav til ressursbruk og oppstartstid. 
+## Konklusjon
+
+- Go utmerker seg på ressursbruk og oppstart. Sammenlignet med Java Spring Boot er runtime imaget ca 1/10, minnebruk ca 1/100 del, og oppstartstid ca 1/80 del. Dette er oppsiktsvekkende tall og kan være viktig hvis ressurser en knappe.
+- Likevel gir alle løsningene god ytelse for enkle mikrotjenester
+- Valg av teknologi bør baseres på teamets kompetanse, behov for rammeverk, og krav til ressursbruk og oppstartstid. 
